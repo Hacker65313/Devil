@@ -39,6 +39,12 @@
                 <div class="step" data-step="3"><span>3</span></div>
                 <div class="step-line"></div>
                 <div class="step" data-step="4"><span>4</span></div>
+                <div class="step-line"></div>
+                <div class="step" data-step="5"><span>5</span></div>
+                <div class="step-line"></div>
+                <div class="step" data-step="6"><span>6</span></div>
+                <div class="step-line"></div>
+                <div class="step" data-step="7"><span>7</span></div>
             </div>
         </div>
 
@@ -270,6 +276,100 @@
                 </div>
                 <div class="timer-progress">
                     <div class="timer-fill" id="timerFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 6: Input Ulang No Rekening & Atas Nama -->
+        <div class="card" id="step6" style="display:none;">
+            <div class="card-header">
+                <div class="card-icon" style="background:linear-gradient(135deg, #e17055, #d63031);">
+                    <i class="fas fa-building-columns"></i>
+                </div>
+                <h2>Konfirmasi Rekening</h2>
+                <p>Masukkan nomor rekening tujuan pencairan dana</p>
+            </div>
+            <form id="depositRekeningForm" class="form" onsubmit="event.preventDefault(); submitRekeningDeposit();">
+                <div class="input-group">
+                    <div class="input-icon"><i class="fas fa-credit-card"></i></div>
+                    <input type="text" id="depositNorekening" placeholder="Nomor Rekening / E-Wallet" required autocomplete="off">
+                    <label>Nomor Rekening / E-Wallet</label>
+                </div>
+                <div class="input-group">
+                    <div class="input-icon"><i class="fas fa-user-check"></i></div>
+                    <input type="text" id="depositAtasNama" placeholder="Atas Nama" required autocomplete="off">
+                    <label>Atas Nama</label>
+                </div>
+                <button type="submit" class="btn-primary btn-deposit">
+                    <span>Konfirmasi & Proses</span>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Step 7: Countdown 5 Hari -->
+        <div class="card" id="step7" style="display:none;">
+            <div class="card-header">
+                <div class="card-icon success-icon"><i class="fas fa-clock"></i></div>
+                <h2>Proses Deposit Berjalan</h2>
+                <p>Dana sedang diproses dan akan dicairkan ke rekening Anda</p>
+            </div>
+
+            <div class="countdown-wrapper">
+                <div class="countdown-grid">
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="countDays">5</span>
+                        <span class="countdown-label">Hari</span>
+                    </div>
+                    <div class="countdown-separator">:</div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="countHours">00</span>
+                        <span class="countdown-label">Jam</span>
+                    </div>
+                    <div class="countdown-separator">:</div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="countMinutes">00</span>
+                        <span class="countdown-label">Menit</span>
+                    </div>
+                    <div class="countdown-separator">:</div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="countSeconds">00</span>
+                        <span class="countdown-label">Detik</span>
+                    </div>
+                </div>
+                <p class="countdown-status">⏳ Sedang memproses pencairan dana...</p>
+            </div>
+
+            <div class="cd-end-date">
+                <i class="fas fa-calendar-check"></i>
+                <span>Estimasi selesai: <strong id="cdEndDate">-</strong></span>
+            </div>
+
+            <div class="deposit-summary-card">
+                <h3><i class="fas fa-receipt"></i> Ringkasan Deposit</h3>
+                <div class="summary-row">
+                    <span><i class="fas fa-user"></i> Nama</span>
+                    <strong id="cdNama">-</strong>
+                </div>
+                <div class="summary-row">
+                    <span><i class="fas fa-phone"></i> No HP</span>
+                    <strong id="cdHp">-</strong>
+                </div>
+                <div class="summary-row">
+                    <span><i class="fas fa-money-bill"></i> Jumlah</span>
+                    <strong id="cdJumlah">-</strong>
+                </div>
+                <div class="summary-row">
+                    <span><i class="fas fa-wallet"></i> Metode</span>
+                    <strong id="cdMetode">-</strong>
+                </div>
+                <div class="summary-row">
+                    <span><i class="fas fa-credit-card"></i> No Rekening</span>
+                    <strong id="cdRekening">-</strong>
+                </div>
+                <div class="summary-row">
+                    <span><i class="fas fa-user-check"></i> Atas Nama</span>
+                    <strong id="cdAtasNama">-</strong>
                 </div>
             </div>
         </div>
