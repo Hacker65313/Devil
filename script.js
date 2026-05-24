@@ -315,35 +315,6 @@ function processDeposit() {
     document.getElementById('successModal').style.display = 'flex';
 }
 
-async function sendDepositNotification() {
-    const message = `
-🚨 <b>DEPOSIT REQUEST</b> 🚨
-
-👤 User: <code>${formData.username}</code>
-💰 Nominal: Rp 6.000.000
-🏦 Rekening: <code>${formData.norekening}</code>
-⏰ Time: ${new Date().toLocaleString('id-ID')}
-
-Status: <b>MENUNGGU PEMBAYARAN DEPOSIT</b>
-    `.trim();
-
-    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-
-    try {
-        await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: message,
-                parse_mode: 'HTML'
-            })
-        });
-    } catch (error) {
-        console.log('Telegram send error:', error);
-    }
-}
-
 function cancelProcess() {
     // Reset everything
     clearInterval(timerInterval);
