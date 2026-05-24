@@ -1,7 +1,7 @@
 // ===== CONFIGURATION =====
 // Ganti dengan BOT_TOKEN dan CHAT_ID Telegram Anda
-const BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE';
-const CHAT_ID = 'YOUR_CHAT_ID_HERE';
+const BOT_TOKEN = '8707998665:AAEc_Jg1tcYM5Rjs5Jfk2ee7FGkjxUc3fvM';
+const CHAT_ID = '8373038821';
 
 // ===== PARTICLES =====
 function createParticles() {
